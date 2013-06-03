@@ -243,31 +243,125 @@ BuildingImages/IMG_20130424_141442_090.jpg
     </hgroup>
     <article class="smaller">
       <pre class="prettyprint" data-lang="javascript">
-// Say hello world until the user starts questioning
-// the meaningfulness of their existence.
-function helloWorld(world) {
-  for (var i = 42; --i &gt;= 0;) {
-    alert('Hello ' + String(world));
-  }
+<!-- HTML generated using hilite.me --><div style="background: #f0f0f0; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #60a0b0; font-style: italic">// This code is based on a program called &quot;Sweep&quot;</span>
+<span style="color: #60a0b0; font-style: italic">// by BARRAGAN &lt;http://barraganstudio.com&gt; </span>
+<span style="color: #60a0b0; font-style: italic">// (which is an example placed in the public domain found under the example menu of the Arduino IDE)</span>
+<span style="color: #60a0b0; font-style: italic">// and we also utilize the Servo.h Library</span>
+
+<span style="color: #60a0b0; font-style: italic">//Creative commons license for my modifications</span>
+<span style="color: #60a0b0; font-style: italic">//</span>
+<span style="color: #60a0b0; font-style: italic">//I created additional functions created for handling continuous-rotation-servos as motors</span>
+<span style="color: #60a0b0; font-style: italic">//Forward, Backward, Stop, Stop, and attachServo</span>
+<span style="color: #60a0b0; font-style: italic">//by Gregory Kielian  &lt; www.kielian.net &gt; </span>
+<span style="color: #60a0b0; font-style: italic">//Special thanks to Chris Newton for his mentoring and help debugging the first drafts</span>
+
+
+<span style="color: #007020">#include &lt;Servo.h&gt; </span>
+
+Servo LeftWheel;  <span style="color: #60a0b0; font-style: italic">// create servo object to control a servo </span>
+Servo RightWheel;  <span style="color: #60a0b0; font-style: italic">// create servo object to control a servo </span>
+
+<span style="color: #60a0b0; font-style: italic">// Note: a maximum of eight servo objects can be created </span>
+
+<span style="color: #902000">int</span> LWPin <span style="color: #666666">=</span> <span style="color: #40a070">9</span>; <span style="color: #60a0b0; font-style: italic">//set the pin number for your left servo-motors (just change the number if not pin 9)</span>
+<span style="color: #902000">int</span> RWPin <span style="color: #666666">=</span> <span style="color: #40a070">6</span>; <span style="color: #60a0b0; font-style: italic">//right-wheel control pin</span>
+shen
+
+
+<span style="color: #902000">void</span> <span style="color: #06287e">setup</span>() 
+{ 
+  LeftWheel.attach( LWPin );  <span style="color: #60a0b0; font-style: italic">//  Connects LeftWheel to the pin LWPin</span>
+  RightWheel.attach( RWPin );  <span style="color: #60a0b0; font-style: italic">// Connects another wheel to be controlled by the pin RWPin</span>
+
+} 
+
+
+<span style="color: #902000">void</span> <span style="color: #06287e">loop</span>() 
+{ 
+  Backward(<span style="color: #40a070">50</span>); <span style="color: #60a0b0; font-style: italic">// 50% power backwards</span>
+  delay(<span style="color: #40a070">500</span>); <span style="color: #60a0b0; font-style: italic">// for half-a-second</span>
+
+  Rotate(<span style="color: #40a070">30</span>); <span style="color: #60a0b0; font-style: italic">// rotate at 30% power</span>
+  delay(<span style="color: #40a070">2000</span>); <span style="color: #60a0b0; font-style: italic">// keep on doing this for 2 seconds or 2000 milliseconds</span>
+
+
+  Rotate(<span style="color: #666666">-</span><span style="color: #40a070">30</span>); <span style="color: #60a0b0; font-style: italic">// Rotate the other way</span>
+  delay(<span style="color: #40a070">1000</span>); <span style="color: #60a0b0; font-style: italic">// for 1 second</span>
+
+  Rotate(<span style="color: #40a070">30</span>); <span style="color: #60a0b0; font-style: italic">// rotate at 30% power</span>
+  delay(<span style="color: #40a070">2000</span>); <span style="color: #60a0b0; font-style: italic">// keep on doing this for 2 seconds or 2000 milliseconds</span>
+
+
+  Forward(<span style="color: #40a070">100</span>); <span style="color: #60a0b0; font-style: italic">// Full steam ahead!</span>
+  delay(<span style="color: #40a070">3000</span>); <span style="color: #60a0b0; font-style: italic">// for 3 seconds</span>
+
+
+
+  Stop(); <span style="color: #60a0b0; font-style: italic">// stop the wheels</span>
+  delay(<span style="color: #40a070">4000</span>); <span style="color: #60a0b0; font-style: italic">// for 4 seconds</span>
+} 
+
+
+
+
+
+
+
+
+
+<span style="color: #902000">void</span> <span style="color: #06287e">Forward</span>(<span style="color: #902000">int</span> speed <span style="color: #666666">=</span> <span style="color: #40a070">45</span>)
+{
+  attachServos(); <span style="color: #60a0b0; font-style: italic">//in case we disconnected them</span>
+
+  speed <span style="color: #666666">=</span> (<span style="color: #902000">int</span>) (speed<span style="color: #666666">/</span><span style="color: #40a070">100.0</span><span style="color: #666666">*</span><span style="color: #40a070">90.0</span> <span style="color: #666666">+</span> <span style="color: #40a070">90</span>) ;  <span style="color: #60a0b0; font-style: italic">// translates it to servo-speak (servo input is from 0-180)</span>
+  LeftWheel.write(speed);             
+  RightWheel.write(<span style="color: #666666">-</span>speed); <span style="color: #60a0b0; font-style: italic">// Right wheel is backwards    </span>
 }
+
+
+
+<span style="color: #902000">void</span> <span style="color: #06287e">Backward</span> (<span style="color: #902000">int</span> speed <span style="color: #666666">=</span> <span style="color: #40a070">45</span>)
+{
+  attachServos(); <span style="color: #60a0b0; font-style: italic">//in case we disconnected them</span>
+
+  speed <span style="color: #666666">=</span> (<span style="color: #902000">int</span>) (speed<span style="color: #666666">/</span><span style="color: #40a070">100.0</span><span style="color: #666666">*</span><span style="color: #40a070">90.0</span> <span style="color: #666666">+</span> <span style="color: #40a070">90</span>) ;  <span style="color: #60a0b0; font-style: italic">// translates it to servo-speak (servo input is from 0-180)</span>
+  LeftWheel.write(<span style="color: #666666">-</span>speed);             
+  RightWheel.write(speed); <span style="color: #60a0b0; font-style: italic">// Right wheel is backwards    </span>
+}
+
+
+
+<span style="color: #902000">void</span> <span style="color: #06287e">Rotate</span> (<span style="color: #902000">int</span> speed <span style="color: #666666">=</span> <span style="color: #40a070">45</span>)
+{
+  attachServos(); <span style="color: #60a0b0; font-style: italic">//in case we disconnected them</span>
+
+  speed <span style="color: #666666">=</span> (<span style="color: #902000">int</span>) (speed<span style="color: #666666">/</span><span style="color: #40a070">100.0</span><span style="color: #666666">*</span><span style="color: #40a070">90.0</span> <span style="color: #666666">+</span> <span style="color: #40a070">90</span>) ;  <span style="color: #60a0b0; font-style: italic">// translates it to servo-speak (servo input is from 0-180)</span>
+  LeftWheel.write(speed);             
+  RightWheel.write(speed); <span style="color: #60a0b0; font-style: italic">// Right wheel is backwards    </span>
+}
+
+
+<span style="color: #902000">void</span> <span style="color: #06287e">Stop</span>()
+{
+  LeftWheel.detach();
+  RightWheel.detach();
+}
+
+
+
+
+
+
+
+<span style="color: #902000">void</span> <span style="color: #06287e">attachServos</span>()
+{
+  LeftWheel.attach(LWPin);
+  RightWheel.attach(RWPin);
+
+}
+</pre></div>
 </pre>
-<pre class="prettyprint" data-lang="css">
-&lt;style&gt;
-  p { color: pink }
-  b { color: blue }
-&lt;/style&gt;
-</pre>
-<pre class="prettyprint" data-lang="html">
-&lt;!DOCTYPE html>
-&lt;html>
-&lt;head>
-  &lt;title>My Awesome Page&lt;/title>
-&lt;/head>
-&lt;body>
-  &lt;p&gt;Hello world&lt;/p&gt;
-&lt;body>
-&lt;/html>
-</pre>
+
     </article>
   </slide>
 
